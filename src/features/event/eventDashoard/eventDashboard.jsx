@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Grid, Button } from "semantic-ui-react";
 import EventList from "../eventList/eventList";
 import EventForm from "../eventForm/eventForm";
+import cuid from "cuid";
 
 const eventsDashboard = [
   {
@@ -57,7 +58,8 @@ const eventsDashboard = [
 class EventDashboard extends Component {
   state = {
     events: eventsDashboard,
-    isOpen: false
+    isOpen: false,
+    selectedEvent: null
   };
 
   // this.handleFormOpen = this.handleFormOpen.bind(this);
@@ -65,6 +67,7 @@ class EventDashboard extends Component {
 
   handleFormOpen = () => {
     this.setState({
+      selectedEvent: null,
       isOpen: true
     });
   };
@@ -75,11 +78,49 @@ class EventDashboard extends Component {
     });
   };
 
+  handleUpdateEvent = updatedEvent => {
+    this.setState({
+      events: this.state.events.map(event => {
+        if (event.id === updatedEvent.id) {
+          return Object.assign({}, updatedEvent);
+        } else {
+          return event;
+        }
+      }),
+      selectedEvent: null,
+      isOpen: false
+    });
+  };
+
+  handleDeleteEvent = eventId => () => {
+    const updatedEvent = this.state.events.filter(e => e.id !== eventId);
+    this.setState({ events: updatedEvent });
+  };
+
+  handleOpenEvent = eventToOpen => () => {
+    this.setState({ selectedEvent: eventToOpen, isOpen: true });
+  };
+
+  handleCreateEvent = newEvent => {
+    newEvent.id = cuid();
+    newEvent.hostPhotoURL = "/assets/user.png";
+    const newEvents = [...this.state.events, newEvent];
+    this.setState({
+      events: newEvents,
+      isOpen: false
+    });
+  };
+
   render() {
+    const { selectedEvent } = this.state;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList events={this.state.events} />
+          <EventList
+            deleteEvent={this.handleDeleteEvent}
+            eventToOpen={this.handleOpenEvent}
+            events={this.state.events}
+          />
         </Grid.Column>
         <Grid.Column width={6}>
           <Button
@@ -87,7 +128,14 @@ class EventDashboard extends Component {
             content="Create Event"
             onClick={this.handleFormOpen}
           />
-          {this.state.isOpen && <EventForm handleCancel={this.handleCancel} />}
+          {this.state.isOpen && (
+            <EventForm
+              createEvent={this.handleCreateEvent}
+              handleCancel={this.handleCancel}
+              updateEvent={this.handleUpdateEvent}
+              selectedEvent={selectedEvent}
+            />
+          )}
         </Grid.Column>
       </Grid>
     );
