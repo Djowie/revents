@@ -1,6 +1,6 @@
 import React from "react";
 
-const photosPage = () => {
+const PhotosPage = () => {
   return (
     <div>
       <h1>photosPage</h1>
@@ -8,4 +8,4 @@ const photosPage = () => {
   );
 };
 
-export default photosPage;
+export default PhotosPage;

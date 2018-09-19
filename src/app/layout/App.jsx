@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 import EventForm from "../../features/event/eventForm/eventForm";
 import peopleDashboard from "../../features/user/peopleDashboard/peopleDashboard";
@@ -14,16 +14,28 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar />
-        <Container className="main">
+        <Switch>
           <Route exact path="/" component={homePage} />
-          <Route path="/events" component={EventDashboard} />
-          <Route path="/event/:id" component={eventDetailPage} />
-          <Route path="/people" component={peopleDashboard} />
-          <Route path="/profile/:id" component={userDetailPage} />
-          <Route path="/settings" component={settingsDashboard} />
-          <Route path="/createEvent" component={EventForm} />
-        </Container>
+        </Switch>
+
+        <Route
+          path="/(.+)"
+          render={() => (
+            <div>
+              <NavBar />
+              <Container className="main">
+                <Switch>
+                  <Route path="/events" component={EventDashboard} />
+                  <Route path="/event/:id" component={eventDetailPage} />
+                  <Route path="/people" component={peopleDashboard} />
+                  <Route path="/profile/:id" component={userDetailPage} />
+                  <Route path="/settings" component={settingsDashboard} />
+                  <Route path="/createEvent" component={EventForm} />
+                </Switch>
+              </Container>
+            </div>
+          )}
+        />
       </div>
     );
   }
