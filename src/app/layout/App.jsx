@@ -9,6 +9,7 @@ import EventDashboard from "../../features/event/eventDashoard/eventDashboard";
 import eventDetailPage from "../../features/event/eventDetail/eventDetailPage";
 import NavBar from "../../features/nav/navBar/NavBar";
 import homePage from "../../features/home/homePage";
+import TestComponent from "../../features/testarea/TestComponent";
 
 class App extends Component {
   render() {
@@ -25,6 +26,8 @@ class App extends Component {
               <NavBar />
               <Container className="main">
                 <Switch>
+                  <Route path="/test" component={TestComponent} />
+
                   <Route path="/events" component={EventDashboard} />
                   <Route path="/event/:id" component={eventDetailPage} />
                   <Route path="/people" component={peopleDashboard} />
